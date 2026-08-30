@@ -1,0 +1,41 @@
+Communication job:
+By the end, colleagues should understand that Codex Harness is a reusable agent execution foundation—not merely a multi-agent feature—and see how App Server enables custom UIs and workflows. The deck contains six slides including the cover.
+
+Audience: colleagues at an internal morning meeting.
+Duration: 5 minutes.
+Date: 2026-09-01.
+Language: Japanese.
+Template: Blue Professional.
+
+Verified sources:
+- OpenAI, Unlocking the Codex harness: how we built the App Server, 2026-02-04
+  https://openai.com/index/unlocking-the-codex-harness/
+- OpenAI Codex open-source repository
+  https://github.com/openai/codex
+- OpenAI Help, Using Codex with your ChatGPT plan
+  https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan
+- Yahoo!ニュース, OpenAI / Cursor model-access report
+  https://news.yahoo.co.jp/articles/784d90168e51787797aadb688302857e0ca45ed7
+- OpenAI Help, Using OpenAI models in Cursor
+  https://help.openai.com/en/articles/20001506-using-openai-models-in-cursor
+- Anthropic, Previewing the Model Hardware Standard
+  https://www.anthropic.com/news/model-hardware-standard-research-preview
+- Google, Introducing Gemini 3.5 Transcribe
+  https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5-transcribe/
+- NVIDIA, NCA Generative AI LLMs
+  https://www.nvidia.com/ja-jp/learn/certification/generative-ai-llm-associate/
+
+Asset provenance:
+- assets/codex-clients-app-server.png
+  User-provided diagram showing Codex clients integrated with Codex Harness via App Server.
+- assets/harness-control-center.png
+  User-provided Japanese Harness control-center dashboard screenshot.
+- assets/app-server-process-flow-light.svg
+  OpenAI official App Server process flow image from the article above.
+
+Corrections / uncertainty handling:
+- Official OpenAI publication date is 2026-02-04, not late August. The visible deck avoids the inaccurate release-date claim.
+- OpenAI proposes 2026-11-12 as the Cursor transition date; the official end date can still change.
+- Anthropic MHS is a research preview and is not yet open-sourced.
+- Gemini 3.5 Transcribe supports sub-second live streaming; speaker attribution is stated specifically for pre-recorded audio.
+- Codex plan inclusion is stated with the qualification that limits and credits vary by plan.
