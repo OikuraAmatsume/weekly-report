@@ -1039,8 +1039,17 @@
       border-left: 4px solid var(--primary);
     }
 
-    .minimal-pillars {
+    .pillar-stage {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
       flex: 1;
+      min-height: 0;
+    }
+
+    .minimal-pillars {
+      margin-top: 0 !important;
+      min-height: 0;
       align-items: stretch;
     }
 
@@ -1049,7 +1058,7 @@
       align-items: center;
       justify-content: center;
       min-height: 0;
-      padding: 2rem 1.5rem;
+      padding: 1rem 1.5rem;
       text-align: center;
     }
 
@@ -1060,6 +1069,33 @@
       font-weight: 700;
       line-height: 1.35;
     }
+
+    .secondary-pillars .metric-card {
+      gap: 0.9rem;
+    }
+
+    .more-card {
+      flex-direction: column;
+    }
+
+    .more-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      height: 1.4rem;
+    }
+
+    .more-dot {
+      width: clamp(13px, 1.2vw, 19px);
+      height: clamp(13px, 1.2vw, 19px);
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .more-dot:nth-child(1) { opacity: 0.4; }
+    .more-dot:nth-child(2) { opacity: 0.65; }
+    .more-dot:nth-child(3) { opacity: 1; }
 
     .work-screen {
       flex: 1;
@@ -1382,7 +1418,7 @@
       .definition-stack,
       .usecases-body { grid-template-columns: 1fr; gap: 0.7rem; }
       .official-figure img { height: 29vh; }
-      .minimal-pillars { grid-template-columns: 1fr; }
+      .minimal-pillars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .work-screen img { height: 58vh; }
       .news-slide.four-news .news-card {
         grid-template-columns: minmax(0, 1fr) auto;
@@ -1460,15 +1496,33 @@
       </div>
       <div class="slide-content">
         <h2>Codex Harnessが提供したもの</h2>
-        <div class="metrics-row minimal-pillars">
-          <div class="metric-card">
-            <strong>Agent ディスカバリ</strong>
+        <div class="pillar-stage">
+          <div class="metrics-row minimal-pillars">
+            <div class="metric-card">
+              <strong>Agent ディスカバリ</strong>
+            </div>
+            <div class="metric-card">
+              <strong>Agent 間の連携</strong>
+            </div>
+            <div class="metric-card">
+              <strong>状態とコントロール</strong>
+            </div>
           </div>
-          <div class="metric-card">
-            <strong>Agent 間の連携</strong>
-          </div>
-          <div class="metric-card">
-            <strong>状態とコントロール</strong>
+          <div class="metrics-row minimal-pillars secondary-pillars" aria-label="Codex Harnessが備えるその他の基盤能力">
+            <div class="metric-card">
+              <strong>Context 管理</strong>
+            </div>
+            <div class="metric-card">
+              <strong>Sandbox</strong>
+            </div>
+            <div class="metric-card more-card" aria-label="その他の機能">
+              <div class="more-visual" aria-hidden="true">
+                <span class="more-dot"></span>
+                <span class="more-dot"></span>
+                <span class="more-dot"></span>
+              </div>
+              <strong>More</strong>
+            </div>
           </div>
         </div>
       </div>
