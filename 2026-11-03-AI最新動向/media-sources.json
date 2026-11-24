@@ -1,0 +1,14 @@
+{
+  "archon.mp4": "https://video.twimg.com/amplify_video/2117489039800680449/vid/avc1/1280x720/WMhLthl-OkT_2BJM.mp4?tag=29",
+  "archon.jpg": "https://pbs.twimg.com/amplify_video_thumb/2117489039800680449/img/Lc94-7i83_hNW-kX.jpg",
+  "42ai.mp4": "https://42ai.com/videos/hero/hero-markets-hover.mp4",
+  "hunch.gif": "https://raw.githubusercontent.com/undrgrnd-labs/hunch/main/docs/demo/hunch-demo.gif",
+  "hunch-objects.png": "https://raw.githubusercontent.com/undrgrnd-labs/hunch/main/docs/demo/objects.png",
+  "hunch-gestures.png": "https://raw.githubusercontent.com/undrgrnd-labs/hunch/main/docs/demo/gestures.png",
+  "relay.mp4": "https://raw.githubusercontent.com/kopperx/RelayVSR/main/assets/demo/relayvsr-comparison.mp4",
+  "fable.mp4": "https://raw.githubusercontent.com/ChetasLua/moss-keeper/main/index.html (embedded reel extracted)",
+  "fable.jpg": "Same author HTML, embedded poster",
+  "hunch.mp4": "Official objects and gestures screenshots (4 seconds each), followed by the official tool comparison GIF; converted to MP4",
+  "mirage.mp4": "Four captured sample tabs: https://www.cactuscompute.com/blog/mirage (Objects, Text, Relations, Decision; four seconds each)",
+  "fonts": "Google Fonts: Space Grotesk and Inter, original template typefaces"
+}

@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIトピック｜2026年11月3日｜朝会</title>
+  <link href="assets/fonts/fonts.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fdfae7;
+      --primary: #1e2bfa;
+      --text: #111111;
+      --text-muted: #6b6b6b;
+      --text-light: #9a9a9a;
+      --accent-light: rgba(30, 43, 250, 0.08);
+      --accent-medium: rgba(30, 43, 250, 0.15);
+      --border: rgba(30, 43, 250, 0.2);
+      --card-bg: rgba(30, 43, 250, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Slide container */
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* Asymmetric padding: extra bottom space to clear the fixed
+         slide-counter (left) and nav-controls (right). Without this,
+         cards/grids that fill slide-content overlap the nav chrome. */
+      padding: 3.5vw 4vw 8.5vh 4vw;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+      z-index: 10;
+    }
+
+    .slide.prev {
+      transform: translateX(-40px);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    h4 {
+      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    p, li {
+      font-size: clamp(0.85rem, 1.1vw, 1.05rem);
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Slide header bar */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5vh;
+      flex-shrink: 0;
+    }
+
+    .slide-header h4 {
+      margin: 0;
+    }
+
+    .slide-header .tag {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--primary);
+      background: var(--accent-light);
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+    }
+
+    /* Slide content area */
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* Navigation */
+    .nav-controls {
+      position: fixed;
+      bottom: 2.5vh;
+      right: 3vw;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 1.1rem;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary);
+      color: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      position: fixed;
+      bottom: 2.5vh;
+      left: 3vw;
+      z-index: 100;
+    }
+
+    .progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width 0.4s ease;
+      z-index: 100;
+    }
+
+    /* Decorative elements */
+    .accent-line {
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .accent-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ============================================================
+       LAYOUT 1: Cover / Title Slide
+       ============================================================ */
+    .layout-cover {
+      justify-content: center;
+      align-items: flex-start;
+      padding-left: 8vw;
+    }
+
+    .layout-cover h1 {
+      max-width: 55vw;
+      margin-bottom: 1.5rem;
+      line-height: 1.05;
+    }
+
+    .layout-cover .subtitle {
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 40vw;
+      margin-bottom: 3rem;
+      font-weight: 400;
+    }
+
+    .layout-cover .meta {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+    }
+
+    .layout-cover .cover-decoration {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 35vw;
+      height: 100vh;
+      background: var(--accent-light);
+      clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .layout-cover .cover-dots {
+      position: absolute;
+      bottom: 12vh;
+      right: 8vw;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      opacity: 0.25;
+    }
+
+    .layout-cover .cover-dots .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* ============================================================
+       LAYOUT 2: Agenda / Table of Contents
+       ============================================================ */
+    .layout-agenda .agenda-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1rem 3rem;
+      margin-top: 1rem;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .agenda-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .agenda-item:hover {
+      background: var(--card-bg);
+    }
+
+    .agenda-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+      min-width: 36px;
+    }
+
+    .agenda-item h3 {
+      margin-bottom: 0.3rem;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+    }
+
+    .agenda-item p {
+      font-size: clamp(0.8rem, 1vw, 0.95rem);
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       LAYOUT 3: Key Metrics (3 large callouts)
+       Cards size to their content; the row centers vertically
+       inside the remaining slide-content area.
+       ============================================================ */
+    .layout-metrics .slide-content {
+      justify-content: flex-start;
+    }
+
+    .layout-metrics .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      align-items: stretch;
+    }
+
+    .metric-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      padding: 1.5rem 1.6rem;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--card-bg);
+    }
+
+    .metric-card .metric-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.2rem, 3.4vw, 3rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .metric-card .metric-label {
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .metric-card .metric-desc {
+      font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .metric-card .metric-supports {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin: 0.2rem 0 0;
+      padding: 0.7rem 0 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-card .metric-supports li {
+      font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+      color: var(--text-muted);
+      padding-left: 1rem;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .metric-card .metric-supports li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-light);
+    }
+
+    .metric-card .metric-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    .metric-change.positive { color: #059669; }
+    .metric-change.negative { color: #dc2626; }
+
+    /* ============================================================
+       LAYOUT 4: Data Dashboard (6 stat grid)
+       Cells have natural height with stat at top + name + small
+       context line. Grid is auto-sized; the row stays in the upper
+       portion of slide-content with the bottom-padding reserved
+       for nav chrome.
+       ============================================================ */
+    .layout-dashboard .slide-content {
+      justify-content: flex-start;
+    }
+
+    .layout-dashboard .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .stat-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.4rem 1.5rem;
+      border-radius: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .stat-cell .stat-top {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .stat-cell .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-cell .stat-unit {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .stat-cell .stat-name {
+      font-size: clamp(0.85rem, 1vw, 0.95rem);
+      color: var(--text);
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    .stat-cell .stat-context {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ============================================================
+       LAYOUT 5: Two Column Split
+       Left = numbered insight list, Right = pull-quote + supporting
+       stats. Both columns size to their content with natural rhythm
+       (gap-based spacing, no forced height-distribution).
+       ============================================================ */
+    .layout-split .slide-content {
+      justify-content: flex-start;
+    }
+
+    .layout-split .split-body {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 3.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .split-left, .split-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .split-right {
+      padding-left: 2.5rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .insight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin: 0;
+      counter-reset: insight;
+    }
+
+    .insight-list li {
+      position: relative;
+      padding-left: 2.6rem;
+      font-size: clamp(0.88rem, 1.05vw, 1rem);
+      color: var(--text);
+      line-height: 1.55;
+      counter-increment: insight;
+    }
+
+    .insight-list li::before {
+      content: counter(insight, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+      line-height: 1.7;
+    }
+
+    .split-highlight {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.15rem, 1.55vw, 1.5rem);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      padding: 1.3rem 1.5rem;
+      background: var(--accent-light);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .split-highlight cite {
+      display: block;
+      margin-top: 0.7rem;
+      font-style: normal;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .mini-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding-top: 0.4rem;
+    }
+
+    .mini-stat {
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .mini-stat .mini-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .mini-stat .mini-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      line-height: 1.35;
+    }
+
+    /* ============================================================
+       LAYOUT 6: Horizontal Bar Ranking
+       ============================================================ */
+    .layout-bars .bars-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .bar-item {
+      display: grid;
+      grid-template-columns: minmax(180px, 30%) 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+    }
+
+    .bar-label {
+      font-size: clamp(0.8rem, 1.1vw, 1rem);
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .bar-track {
+      height: 28px;
+      background: var(--accent-light);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 6px;
+      transition: width 0.8s ease;
+    }
+
+    .bar-pct {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-width: 45px;
+      text-align: right;
+    }
+
+    .bar-note {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.2rem;
+    }
+
+    /* ============================================================
+       LAYOUT 7: Quote / Highlight
+       ============================================================ */
+    .layout-quote {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .layout-quote .quote-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--primary);
+      opacity: 0.15;
+      line-height: 0.5;
+      margin-bottom: 1rem;
+    }
+
+    .layout-quote blockquote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--text);
+      max-width: 65vw;
+      margin-bottom: 2rem;
+    }
+
+    .layout-quote .quote-source {
+      font-size: clamp(0.85rem, 1.1vw, 1rem);
+      color: var(--text-muted);
+    }
+
+    .layout-quote .quote-source strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .layout-quote .quote-decoration {
+      position: absolute;
+      top: 10vh;
+      left: 5vw;
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+    }
+
+    .layout-quote .quote-decoration-2 {
+      position: absolute;
+      bottom: 12vh;
+      right: 6vw;
+      width: 60px;
+      height: 60px;
+      background: var(--accent-light);
+      border-radius: 50%;
+    }
+
+    /* ============================================================
+       LAYOUT 8: Timeline / Process Flow
+       ============================================================ */
+    .layout-timeline .timeline-track {
+      display: flex;
+      gap: 1.5rem;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .timeline-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .timeline-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      right: -0.75rem;
+      width: 1.5rem;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .step-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .timeline-step:nth-child(2) .step-circle { opacity: 0.85; }
+    .timeline-step:nth-child(3) .step-circle { opacity: 0.7; }
+    .timeline-step:nth-child(4) .step-circle { opacity: 0.55; }
+
+    .step-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .step-desc {
+      font-size: clamp(0.75rem, 1vw, 0.9rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 220px;
+    }
+
+    /* ============================================================
+       LAYOUT 9: Detailed Analysis (bullets with sub-items)
+       ============================================================ */
+    .layout-detail .detail-body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem 3rem;
+      flex: 1;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .detail-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .detail-block {
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .detail-block h3 {
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+
+    .detail-block ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .detail-block ul li {
+      position: relative;
+      padding-left: 1.1rem;
+      padding-bottom: 0.4rem;
+      font-size: clamp(0.78rem, 1vw, 0.9rem);
+      line-height: 1.5;
+    }
+
+    .detail-block ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .detail-block ul li:last-child {
+      padding-bottom: 0;
+    }
+
+    /* ============================================================
+       LAYOUT 10: Closing / CTA
+       ============================================================ */
+    .layout-closing {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .layout-closing h1 {
+      margin-bottom: 1rem;
+    }
+
+    .layout-closing .closing-sub {
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
+      color: var(--text-muted);
+      max-width: 45vw;
+      margin-bottom: 2.5rem;
+    }
+
+    .layout-closing .cta-btn {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--primary);
+      padding: 0.9rem 2.2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .layout-closing .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30, 43, 250, 0.25);
+    }
+
+    .layout-closing .closing-contact {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .layout-closing .closing-decoration {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .layout-closing .closing-decoration-2 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 360px;
+      height: 360px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Keyboard hint */
+    .keyboard-hint {
+      position: fixed;
+      bottom: 2.5vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--text-light);
+      z-index: 100;
+      opacity: 0.6;
+    }
+
+    /* Responsive adjustments for very small heights */
+    @media (max-height: 700px) {
+      .slide { padding: 2.5vh 3vw; }
+      .layout-agenda .agenda-grid { gap: 0.8rem 2rem; }
+      .agenda-item { padding: 0.8rem; }
+      .metric-card { padding: 1rem; }
+      .layout-bars .bars-container { gap: 0.5rem; }
+      .bar-item { padding: 0.4rem 0; }
+      .detail-block { padding: 0.8rem 1rem; }
+    }
+  </style>
+<style>
+/* Media layout extends Blue Professional's original split layout. */
+body {font-family:'Inter','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif}
+h1,h2,h3,h4 {font-family:'Space Grotesk','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif}
+.slide-header .tag {font-size:13px}
+.topic-title {display:flex;align-items:baseline;gap:24px;margin:0 0 10px}
+.topic-title h1 {font-size:clamp(44px,5vw,67px);color:var(--primary);letter-spacing:-.04em}
+.topic-title span {font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--text-muted)}
+.headline {font-size:clamp(23px,2.5vw,35px);line-height:1.35;margin:0 0 3vh;font-weight:500;letter-spacing:0}
+.layout-split .split-body {margin-top:0;gap:3.5rem;min-height:0;flex:1}
+.split-left {gap:clamp(12px,2.2vh,24px);min-width:0}
+.split-right {gap:14px;min-width:0;padding-left:2.5rem}
+.metric {padding:1.1rem 0 1.2rem;border-top:2px solid var(--primary);border-bottom:1px solid var(--border)}
+.metric strong {display:block;font-family:'Space Grotesk','Hiragino Kaku Gothic ProN',sans-serif;font-size:clamp(27px,3vw,42px);line-height:1.2;color:var(--primary);letter-spacing:-.02em}
+.metric p {margin-top:8px;font-size:clamp(13px,1.1vw,17px)}
+.insight-list {gap:1rem}.insight-list li {font-size:clamp(15px,1.3vw,20px);line-height:1.55;padding-left:2.4rem}
+.insight-list li::before {font-size:14px;top:2px}.insight-list b {display:block;font-size:14px;color:var(--text-muted);font-weight:500;margin-bottom:3px}
+.applications {margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
+.applications h4 {font-size:13px;margin-bottom:7px;letter-spacing:.04em}
+.applications p {font-size:clamp(14px,1.2vw,18px);color:var(--text);line-height:1.7}
+.media-heading {display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-muted);letter-spacing:.04em}
+.media-heading strong {color:var(--primary);font-weight:500}
+.player {position:relative;width:100%;aspect-ratio:16/9;background:var(--text);border-radius:12px;overflow:hidden;isolation:isolate}
+.player video {display:block;width:100%;height:100%;object-fit:contain}
+.play-cover {position:absolute;inset:0;width:100%;border:0;color:var(--bg);background:linear-gradient(transparent 35%,rgba(17,17,17,.5));display:flex;align-items:center;justify-content:center;cursor:pointer}
+.play-cover span {width:68px;height:68px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(253,250,231,.7);border-radius:50%;background:rgba(17,17,17,.42);font-size:25px;padding-left:4px;transition:transform .2s}
+.play-cover:hover span{transform:scale(1.08)}.play-cover[hidden]{display:none}
+.media-caption {font-size:12px;line-height:1.6;color:var(--text-muted);min-height:36px}
+.source-links {display:flex;gap:18px;flex-wrap:wrap}a {color:var(--primary);text-underline-offset:4px}.source-links a{font-size:14px;font-weight:500}
+.caveat {margin-top:auto;padding:14px 16px;background:var(--accent-light);border-radius:10px;font-size:13px;line-height:1.65;color:var(--text)}
+.caveat strong {display:block;color:var(--primary);font-size:11px;letter-spacing:.08em;margin-bottom:5px}
+.keyboard-hint {display:none}.footer-tools{position:fixed;bottom:2.5vh;left:13vw;z-index:100;display:flex;gap:20px;height:44px;align-items:center}
+.footer-tools button {background:none;border:0;color:var(--text-muted);font:inherit;font-size:12px;cursor:pointer;padding:8px 0}
+.footer-tools button:hover{color:var(--primary)}.slide-counter{bottom:calc(2.5vh + 13px)}
+.date-meta {position:fixed;bottom:calc(2.5vh + 14px);right:15vw;z-index:50;color:var(--text-muted);font-size:11px;letter-spacing:.03em}
+:focus-visible{outline:3px solid var(--primary);outline-offset:5px}
+dialog{max-width:760px;width:calc(100% - 40px);max-height:85vh;margin:auto;padding:32px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:14px;overflow:auto}
+dialog::backdrop{background:rgba(17,17,17,.48)}dialog h2{font-size:28px;margin:0 36px 22px 0}dialog h3{font-size:18px;margin:22px 0 10px}dialog p{font-size:16px;line-height:1.9}dialog li{margin:12px 0}dialog ul{padding-left:20px}
+.close-dialog{position:absolute;right:20px;top:16px;border:0;background:none;font-size:28px;color:var(--primary);cursor:pointer}.small-note{font-size:12px!important;margin-top:20px;border-top:1px solid var(--border);padding-top:14px}
+@media(max-height:760px) and (min-width:901px){.slide{padding-top:2vw}.headline{margin-bottom:2vh}.split-left{gap:12px}.metric{padding:10px 0}.metric strong{font-size:30px}.metric p{margin-top:4px}.insight-list{gap:10px}.insight-list li{font-size:16px}.applications{padding-top:10px}.split-right{gap:9px}.caveat{padding:10px 12px;font-size:12px}.media-caption{min-height:0}}
+@media(max-width:900px){html,body{overflow:hidden}.slide{height:100dvh;overflow-y:auto;padding:28px 24px 100px}.layout-split .split-body{display:flex;flex-direction:column;gap:28px;flex:initial}.split-right{padding:22px 0 0;border-left:0;border-top:2px solid var(--border)}.split-left{gap:18px}.topic-title h1{font-size:44px}.headline{font-size:24px;margin-bottom:24px}.slide-header{margin-bottom:22px}.slide-header .tag{font-size:11px}.insight-list li{font-size:17px}.metric strong{font-size:32px}.applications p{font-size:16px}.caveat{margin-top:6px}.footer-tools{left:80px;gap:14px}.date-meta{display:none}.nav-controls{right:18px;bottom:16px;gap:8px}.nav-btn{width:36px;height:36px}.slide-counter{left:24px;bottom:28px}.footer-tools{bottom:12px;height:44px}.footer-tools button{font-size:11px}.footer-tools button:last-child{display:none}.nav-controls,.footer-tools,.slide-counter{background:var(--bg)}.progress-bar{z-index:120}.slide::after{content:'';min-height:8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{html,body,.deck{overflow:visible;height:auto}.slide{position:relative;opacity:1;transform:none!important;pointer-events:all;width:100%;height:190mm;break-after:page;overflow:hidden;padding:10mm;display:flex!important}.nav-controls,.footer-tools,.progress-bar,.slide-counter,.date-meta{display:none}.layout-split .split-body{display:grid;grid-template-columns:1.05fr 1fr}.play-cover{display:none}}
+.slide{padding-bottom:max(8.5vh,84px)}
+@media(max-width:900px){.slide{padding-bottom:100px}.slide-content{flex:none;min-height:auto}.deck::after{content:'';position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--bg);border-top:1px solid var(--border);z-index:90}.slide::after{min-height:0}}
+</style></head>
+<body><main class="deck"><section class="slide layout-split active" aria-label="1 / 6 Fable 5.5">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">制作を任せる</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>Fable 5.5</h1><span>01 / 06</span></div><h2 class="headline">コードでつくる、短編アニメ</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>The Moss Keeper</strong><p>制作者が公開したアニメーション作品</p></div><ol class="insight-list"><li><b>何が新しい？</b>映像制作をコーディングAIに任せる事例。</li><li><b>見るポイント</b>森の巨人の動き、光の変化、音と映像の一体感。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>教材アニメ ／ 商品説明 ／ 映像の試作</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/fable.jpg" aria-label="Fable 5.5 の紹介映像"><source src="assets/fable.mp4" type="video/mp4"></video><button class="play-cover" aria-label="Fable 5.5 の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">制作者の公開作品｜音声あり</p><div class="source-links"><a href="https://github.com/ChetasLua/moss-keeper" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://chetaslua.github.io/moss-keeper/" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section><section class="slide layout-split " aria-label="2 / 6 42AI">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">行動を予測する</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>42AI</h1><span>02 / 06</span></div><h2 class="headline">人の意思決定を、確率で捉える</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>最大24時間先</strong><p>取引の方向・量などを予測する用途を提示</p></div><ol class="insight-list"><li><b>何が新しい？</b>行動履歴・個人の特性・状況から、次の選択を推定。</li><li><b>見るポイント</b>予測を、取引リスクや不正の早期把握につなげる。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>取引リスク管理 ／ 不正検知 ／ AI応答の個別化</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/42ai.jpg" aria-label="42AI の紹介映像"><source src="assets/42ai.mp4" type="video/mp4"></video><button class="play-cover" aria-label="42AI の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">公式サイトのイメージ映像｜無音・予測の実演ではありません</p><div class="source-links"><a href="https://42ai.com/" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://42ai.com/" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section><section class="slide layout-split " aria-label="3 / 6 Archon">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">編集を任せる</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>Archon</h1><span>03 / 06</span></div><h2 class="headline">いつもの編集スタイルをAIへ</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>素材 → 編集案</strong><p>Selendisの個人向けAI動画エディター</p></div><ol class="insight-list"><li><b>何が新しい？</b>過去の作品・参考動画・編集操作から好みを学ぶ。</li><li><b>見るポイント</b>素材選びやテンポを、クリエイターの好みに近づける。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>SNS動画 ／ イベントのダイジェスト ／ 社内広報</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/archon.jpg" aria-label="Archon の紹介映像"><source src="assets/archon.mp4" type="video/mp4"></video><button class="play-cover" aria-label="Archon の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">Selendis 公式発表動画｜音声あり・英語</p><div class="source-links"><a href="https://selendis.com/" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://x.com/SelendisAI/status/2117663093194998089" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section><section class="slide layout-split " aria-label="4 / 6 hunch">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">判断を軽くする</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>hunch</h1><span>04 / 06</span></div><h2 class="headline">繰り返す判断は、小さなAIに</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>CPUで動作</strong><p>教師モデルから学ぶ、軽量な判断システム</p></div><ol class="insight-list"><li><b>何が新しい？</b>教師の判断を学び、慣れた質問を高速に処理。</li><li><b>見るポイント</b>苦手な入力は教師へ。hunch.liveは画像にも対応。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>ログ分類 ／ ツールの失敗判定 ／ 画像の仕分け</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/hunch.jpg" aria-label="hunch の紹介映像"><source src="assets/hunch.mp4" type="video/mp4"></video><button class="play-cover" aria-label="hunch の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">公式の画像デモ画面とツール判定比較｜無音</p><div class="source-links"><a href="https://github.com/undrgrnd-labs/hunch" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://github.com/undrgrnd-labs/hunch#but-not-just-that" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section><section class="slide layout-split " aria-label="5 / 6 Mirage">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">端末で見る</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>Mirage</h1><span>05 / 06</span></div><h2 class="headline">スマホの中で、画像を理解する</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>22 MB</strong><p>約0.1秒：Galaxy S26のCPUで107 ms</p></div><ol class="insight-list"><li><b>何が新しい？</b>物体検出・文字認識・位置関係をまとめて処理。</li><li><b>見るポイント</b>画像を端末内で解析し、結果を構造化データにする。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>カメラアプリ ／ ウェアラブル ／ オフライン画像分類</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/mirage.jpg" aria-label="Mirage の紹介映像"><source src="assets/mirage.mp4" type="video/mp4"></video><button class="play-cover" aria-label="Mirage の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">公式ページの認識済みサンプル紹介｜画面キャプチャ・無音</p><div class="source-links"><a href="https://www.cactuscompute.com/blog/mirage" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://www.cactuscompute.com/blog/mirage" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section><section class="slide layout-split " aria-label="6 / 6 RelayVSR">
+ <div class="slide-header"><h4>AIトピック <span aria-hidden="true">／</span> 朝会</h4><span class="tag">映像を磨く</span></div>
+ <div class="slide-content"><div class="topic-title"><h1>RelayVSR</h1><span>06 / 06</span></div><h2 class="headline">大小のモデルで、動画を高精細に</h2>
+ <div class="split-body"><div class="split-left"><div class="metric"><strong>縦横4倍</strong><p>960 × 540 → 3840 × 2160 の出力サイズ</p></div><ol class="insight-list"><li><b>何が新しい？</b>大きなモデルが基準フレームを、小さなモデルが全体を処理。</li><li><b>見るポイント</b>細部の見やすさに加え、動いたときの一貫性を比較。</li></ol><div class="applications"><h4>活用のアイデア</h4><p>映像アーカイブ ／ 説明動画 ／ 制作済み映像の高解像度化</p></div></div>
+ <div class="split-right"><div class="media-heading"><strong>映像で見る</strong></div><div class="player"><video controls playsinline preload="metadata" poster="assets/relay.jpg" aria-label="RelayVSR の紹介映像"><source src="assets/relay.mp4" type="video/mp4"></video><button class="play-cover" aria-label="RelayVSR の映像を再生"><span aria-hidden="true">▶</span></button></div><p class="media-caption">研究チームの比較動画｜入力と4倍出力・無音</p><div class="source-links"><a href="https://kopperx.github.io/RelayVSR/" target="_blank" rel="noopener noreferrer">出典を読む ↗</a><a href="https://kopperx.github.io/RelayVSR/" target="_blank" rel="noopener noreferrer">元のページで見る ↗</a></div></div></div></div></section></main>
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">6</span></div>
+  <div class="keyboard-hint">Use arrow keys to navigate</div>
+  <div class="progress-bar" id="progress"></div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="前のスライド">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="次のスライド">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+<div class="footer-tools"><button id="notesBtn" title="N">発表メモ</button><button id="sourcesBtn">出典</button><button id="fullscreenBtn" title="F">全画面</button></div><div class="date-meta">2026.11.03　｜　← → で移動</div><dialog aria-label="補足情報"><button class="close-dialog" aria-label="閉じる">×</button><div id="dialogBody"></div></dialog><script>
+    const slides = document.querySelectorAll('.slide');
+    const currentEl = document.getElementById('current');
+    const totalEl = document.getElementById('total');
+    const progressEl = document.getElementById('progress');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let current = Math.max(0,Math.min(slides.length-1,parseInt(location.hash.slice(1)||'1',10)-1)) || 0;
+    const total = slides.length;
+    totalEl.textContent = total;
+
+    function updateSlide() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active', 'prev');
+        slide.inert = i !== current; slide.setAttribute('aria-hidden', i !== current);
+        if(i !== current) slide.querySelectorAll('video').forEach(v=>v.pause());
+        if (i === current) {
+          slide.classList.add('active');
+        } else if (i < current) {
+          slide.classList.add('prev');
+        }
+      });
+      currentEl.textContent = current + 1;
+      history.replaceState(null,'','#'+(current+1));
+      progressEl.style.width = ((current + 1) / total * 100) + '%';
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+    }
+
+    function changeSlide(dir) {
+      const next = current + dir;
+      if (next >= 0 && next < total) {
+        current = next;
+        updateSlide();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(document.querySelector('dialog[open]') || e.target.closest('video,input,textarea,select') || (e.key===' ' && e.target.closest('button,a'))) return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        changeSlide(-1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        current = 0;
+        updateSlide();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        current = total - 1;
+        updateSlide();
+      }
+    });
+
+    // Touch support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.target.closest('.player,a,button,dialog') ? null : e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (touchStartX !== null && Math.abs(diff) > 80) {
+        changeSlide(diff > 0 ? 1 : -1);
+      }
+    }, { passive: true });
+
+    updateSlide();
+  
+const topics=[{"name": "Fable 5.5", "category": "制作を任せる", "title": "コードでつくる、短編アニメ", "number": "01", "metric": "The Moss Keeper", "metricLabel": "制作者が公開したアニメーション作品", "points": [["何が新しい？", "映像制作をコーディングAIに任せる事例。"], ["見るポイント", "森の巨人の動き、光の変化、音と映像の一体感。"]], "apps": "教材アニメ ／ 商品説明 ／ 映像の試作", "caveat": "制作者の申告。モデル名・制作時間・生成モデル不使用は未検証。", "video": "fable", "caption": "制作者の公開作品｜音声あり", "watch": "https://chetaslua.github.io/moss-keeper/", "sources": [["制作者のコードと説明", "https://github.com/ChetasLua/moss-keeper"], ["Anthropic 公式モデル一覧", "https://www.anthropic.com/system-cards"]], "notes": "最初は、コーディングAIによる映像制作の事例です。制作者が公開した「The Moss Keeper」では、森の巨人が目覚め、空へ向かう短い物語を見られます。注目したいのは、AIに一つの制作工程をまとめて任せる可能性です。教材や商品説明の試作に応用できそうです。ただし、Fable 5.5というモデル名や、画像・動画生成モデルを使っていないという説明は未検証です。公開コードで確認できるのは、完成した動画をHTMLで再生する仕組みまでです。"}, {"name": "42AI", "category": "行動を予測する", "title": "人の意思決定を、確率で捉える", "number": "02", "metric": "最大24時間先", "metricLabel": "取引の方向・量などを予測する用途を提示", "points": [["何が新しい？", "行動履歴・個人の特性・状況から、次の選択を推定。"], ["見るポイント", "予測を、取引リスクや不正の早期把握につなげる。"]], "apps": "取引リスク管理 ／ 不正検知 ／ AI応答の個別化", "caveat": "「98%」は予測区間のカバー率の説明。個々の行動の的中率ではない。", "video": "42ai", "caption": "公式サイトのイメージ映像｜無音・予測の実演ではありません", "watch": "https://42ai.com/", "sources": [["公式サイト・用途", "https://42ai.com/"], ["CEOへの取材：98%の意味", "https://techcrunch.com/2026/11/02/42ai-comes-out-of-stealth-with-62-5m-and-a-world-model-that-can-predict-human-behavior/"]], "notes": "次は、42AIの行動世界モデルです。行動履歴だけでなく、その人の特性や周囲の状況も組み合わせ、次にどのような選択をするかを予測します。公式サイトでは、証券会社向けに最大24時間先の取引を予測する用途を紹介しています。ここで注意したいのが98%という数字です。これは個人の行動を98%当てるという意味ではなく、取引フローが予測範囲に入る割合の説明です。朝会では、未来を断定するAIではなく、意思決定のリスクを早めに把握する技術として捉えるのが適切です。"}, {"name": "Archon", "category": "編集を任せる", "title": "いつもの編集スタイルをAIへ", "number": "03", "metric": "素材 → 編集案", "metricLabel": "Selendisの個人向けAI動画エディター", "points": [["何が新しい？", "過去の作品・参考動画・編集操作から好みを学ぶ。"], ["見るポイント", "素材選びやテンポを、クリエイターの好みに近づける。"]], "apps": "SNS動画 ／ イベントのダイジェスト ／ 社内広報", "caveat": "「数分で編集」は開発元の説明。早期アクセス・ウェイトリスト制。", "video": "archon", "caption": "Selendis 公式発表動画｜音声あり・英語", "watch": "https://x.com/SelendisAI/status/2117663093194998089", "sources": [["Selendis 公式サイト", "https://selendis.com/"], ["開発元の発表・動画", "https://x.com/SelendisAI/status/2117663093194998089"]], "notes": "三つ目は、動画編集モデルのArchonです。Selendisは、過去の作品や参考動画、エディター上での操作から、利用者の編集スタイルを学ぶと説明しています。毎回ゼロから指示する負担が減り、素材選びやテンポを自分たちの表現に近づけられる点が注目です。SNS動画やイベントのダイジェスト、社内広報の初稿づくりで役立ちそうです。数分で完成するという説明は開発元の主張で、現在は早期アクセス段階です。実用時には、初稿のあとにどれだけ修正が必要かを見たいところです。"}, {"name": "hunch", "category": "判断を軽くする", "title": "繰り返す判断は、小さなAIに", "number": "04", "metric": "CPUで動作", "metricLabel": "教師モデルから学ぶ、軽量な判断システム", "points": [["何が新しい？", "教師の判断を学び、慣れた質問を高速に処理。"], ["見るポイント", "苦手な入力は教師へ。hunch.liveは画像にも対応。"]], "apps": "ログ分類 ／ ツールの失敗判定 ／ 画像の仕分け", "caveat": "Jevの公式視覚版ではありません。複雑な推論は教師モデルに委ねます。", "video": "hunch", "caption": "公式の画像デモ画面とツール判定比較｜無音", "watch": "https://github.com/undrgrnd-labs/hunch#but-not-just-that", "sources": [["公式コード・画像デモ", "https://github.com/undrgrnd-labs/hunch"], ["判断の設計ガイド", "https://github.com/undrgrnd-labs/hunch/blob/main/docs/question-design.md"]], "notes": "四つ目は、普通のCPUで動くhunchです。大きなモデルを先生として、同じ種類の判断を繰り返し学びます。十分に学んだ質問は小さなモデルが処理し、苦手な入力は先生に戻します。ログの分類やAIツールの失敗判定など、大量に発生する小さな判断の費用と待ち時間を減らす仕組みです。hunch.liveでは画像にも対応し、物体やジェスチャーのサンプルも公開されています。何でも考えられる汎用AIではなく、よく出る判断を引き受ける役割として見ると分かりやすいと思います。"}, {"name": "Mirage", "category": "端末で見る", "title": "スマホの中で、画像を理解する", "number": "05", "metric": "22 MB", "metricLabel": "約0.1秒：Galaxy S26のCPUで107 ms", "points": [["何が新しい？", "物体検出・文字認識・位置関係をまとめて処理。"], ["見るポイント", "画像を端末内で解析し、結果を構造化データにする。"]], "apps": "カメラアプリ ／ ウェアラブル ／ オフライン画像分類", "caveat": "容量はモデルファイル。速度は開発元測定。OCRは日本語非対応。", "video": "mirage", "caption": "公式ページの認識済みサンプル紹介｜画面キャプチャ・無音", "watch": "https://www.cactuscompute.com/blog/mirage", "sources": [["公式解説・ブラウザデモ", "https://www.cactuscompute.com/blog/mirage"], ["公式モデル・ライセンス", "https://huggingface.co/Cactus-Compute/mirage"]], "notes": "五つ目は、約22メガバイトの画像認識モデル、Mirageです。物体を見つける、文字を読む、物体同士の位置関係を捉える、といった処理を端末の中で行います。開発元の測定では、Galaxy S26のCPUで107ミリ秒、NPUで74ミリ秒です。通信を待たずに使いたいカメラアプリや、画像を外へ送りたくない用途で検討できます。ただし22メガバイトはモデルファイルの容量で、すべてのスマホで同じ速度が出るわけではありません。文字認識も現時点ではラテン文字のみで、日本語には対応していません。"}, {"name": "RelayVSR", "category": "映像を磨く", "title": "大小のモデルで、動画を高精細に", "number": "06", "metric": "縦横4倍", "metricLabel": "960 × 540 → 3840 × 2160 の出力サイズ", "points": [["何が新しい？", "大きなモデルが基準フレームを、小さなモデルが全体を処理。"], ["見るポイント", "細部の見やすさに加え、動いたときの一貫性を比較。"]], "apps": "映像アーカイブ ／ 説明動画 ／ 制作済み映像の高解像度化", "caveat": "13.82 GBはA100・1080p時の測定。14 GBで4K処理できるとは未確認。", "video": "relay", "caption": "研究チームの比較動画｜入力と4倍出力・無音", "watch": "https://kopperx.github.io/RelayVSR/", "sources": [["公式研究ページ・比較動画", "https://kopperx.github.io/RelayVSR/"], ["論文・測定条件", "https://arxiv.org/abs/2609.37850"], ["公式実装", "https://github.com/kopperx/RelayVSR"]], "notes": "最後は、動画を高解像度化するRelayVSRです。大きなモデルですべてのフレームを処理する代わりに、一部の基準フレームを作り、小さなモデルがその情報を使って全体を仕上げます。公式実装は縦横4倍の出力で、960かける540の動画なら4Kのサイズになります。古い映像や説明動画の再利用で検討できます。ただし、約14ギガバイトというGPUメモリの数字は1080pでの測定です。4Kでも同じ条件とは言えません。比較動画では解像感だけでなく、顔や文字の変化、動きのちらつきも確認するとよさそうです。"}];
+document.querySelectorAll('.play-cover').forEach(btn=>btn.addEventListener('click',async()=>{const v=btn.previousElementSibling;try{await v.play();btn.hidden=true}catch(e){btn.hidden=true;v.controls=true}}));
+document.querySelectorAll('video').forEach(v=>{v.addEventListener('play',()=>{v.nextElementSibling.hidden=true;document.querySelectorAll('video').forEach(other=>{if(other!==v)other.pause()})});v.addEventListener('error',()=>{v.closest('.split-right').querySelector('.media-caption').textContent='動画を読み込めませんでした。「元のページで見る」をご利用ください。'})});
+const dialog=document.querySelector('dialog'),dialogBody=document.getElementById('dialogBody');
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function showNotes(){document.querySelectorAll('video').forEach(v=>v.pause());const t=topics[current];dialogBody.innerHTML='<h2>'+esc(t.name)+'｜話すポイント</h2><p>'+esc(t.notes)+'</p><p class="small-note">1テーマ約45秒。導入・締めで計30秒。動画は会後に各自で視聴します。</p>';dialog.showModal()}
+function showSources(){document.querySelectorAll('video').forEach(v=>v.pause());dialogBody.innerHTML='<h2>出典と資料について</h2><p>資料日付：2026年11月3日。情報確認日：2026年11月24日。11月3日以降に公開・更新された資料を含みます。Mirageの公式発表記事は11月6日付です。</p>'+topics.map(t=>'<h3>'+esc(t.number+' '+t.name)+'</h3><ul>'+t.sources.map(([l,u])=>'<li><a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(l)+' ↗</a></li>').join('')+'</ul>').join('')+'<p class="small-note">数値は各開発元の公開情報・測定値です。活用のアイデアは本資料の提案であり、導入実績を示すものではありません。Fableのモデル名・制作過程は未検証です。映像の権利は各作者・提供元に帰属します。</p>';dialog.showModal()}
+function toggleFullscreen(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.()}
+document.getElementById('notesBtn').addEventListener('click',showNotes);document.getElementById('sourcesBtn').addEventListener('click',showSources);document.getElementById('fullscreenBtn').addEventListener('click',toggleFullscreen);
+document.querySelector('.close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
+document.addEventListener('keydown',e=>{if(dialog.open||e.target.closest('button,a,video,input,textarea'))return;if(e.key.toLowerCase()==='n')showNotes();if(e.key.toLowerCase()==='f')toggleFullscreen()});
+</script></body></html>
